@@ -14,8 +14,10 @@
     "element-plus": "^2.8.1",
     "lodash-es": "^4.17.21",
     "marked": "^14.1.1",
+    "nanoid": "^5.0.7",
     "uuid": "^10.0.0",
-    "vue": "^3.4.29"
+    "vue": "^3.4.29",
+    "vue-router": "^4.4.3"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.0.5",

@@ -16,7 +16,7 @@ const props = defineProps({
 const emit = defineEmits(["selectNote", "updateTitle"]);
 
 const sortedItems = computed(() => {
-  return [...props.items].sort((a, b) => b.time - a.time);
+  return [...props.items].sort((a, b) => new Date(b.time) - new Date(a.time));
 });
 
 const selectNote = (note) => {
@@ -38,7 +38,7 @@ const startEditingTitle = async (note) => {
 
 const handleSubmitTitle = (note) => {
   if (note.title.trim() === "") {
-    note.title = "New note";
+    note.title = "";
   }
   editingTitleId.value = null;
   emit("updateTitle", note);
@@ -46,36 +46,40 @@ const handleSubmitTitle = (note) => {
 </script>
 
 <template>
-  <el-menu :default-active="currentNote?.id.toString()">
-    <el-menu-item
-      v-for="note in sortedItems"
-      :key="note.id"
-      :index="note.id.toString()"
-      @click="selectNote(note)"
-    >
-      <el-input
-        v-if="editingTitleId === note.id"
-        v-model="note.title"
-        size="small"
-        maxlength="100"
-        class="title-input"
-        ref="titleInputRefs"
-        @blur="handleSubmitTitle(note)"
-        @keyup.enter="handleSubmitTitle(note)"
-      />
+  <el-menu :default-active="currentNote?.id">
+    <transition-group name="list" tag="el-menu">
+      <el-menu-item
+        v-for="note in sortedItems"
+        :key="note.id"
+        :index="note.id"
+        @click="selectNote(note)"
+      >
+        <el-input
+          v-if="editingTitleId === note.id"
+          v-model="note.title"
+          size="small"
+          maxlength="100"
+          class="title-input"
+          ref="titleInputRefs"
+          @blur="handleSubmitTitle(note)"
+          @keyup.enter="handleSubmitTitle(note)"
+        />
 
-      <template v-else>
-        <el-text
-          @click.prevent="startEditingTitle(note)"
-          class="title-text"
-          truncated
-        >
-          {{ note.title }}
-        </el-text>
-      </template>
+        <template v-else>
+          <el-text
+            @click.stop="startEditingTitle(note)"
+            class="title-text"
+            truncated
+          >
+            {{ note.title || note.id }}
+          </el-text>
+        </template>
 
-      <span class="note-time">{{ getFormattedTime(note.time, "short") }}</span>
-    </el-menu-item>
+        <span class="note-time">
+          {{ getFormattedTime(new Date(note.time), "short") }}
+        </span>
+      </el-menu-item>
+    </transition-group>
   </el-menu>
 </template>
 
@@ -83,6 +87,7 @@ const handleSubmitTitle = (note) => {
 .el-menu {
   flex-grow: 1;
   overflow-y: auto;
+  border-right: none;
 }
 
 .el-menu-item {
@@ -106,5 +111,21 @@ const handleSubmitTitle = (note) => {
 .note-time {
   font-size: 0.8em;
   color: #999;
+}
+
+.list-move,
+.list-enter-active,
+.list-leave-active {
+  transition: all 0.5s ease;
+}
+
+.list-enter-from,
+.list-leave-to {
+  opacity: 0;
+  transform: translateX(30px);
+}
+
+.list-leave-active {
+  position: absolute;
 }
 </style>

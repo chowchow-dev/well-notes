@@ -54,6 +54,14 @@ const handleSaveNote = () => {
   });
 };
 
+const handleInputChange = () => {
+  emit("saveNote", {
+    ...props.currentNote,
+    markdown: input.value,
+    time: new Date(),
+  });
+};
+
 watch(
   () => props.currentNote,
   (newVal) => {
@@ -83,6 +91,7 @@ watch(
       class="editor-input"
       ref="textareaRef"
       v-model="input"
+      @input="handleInputChange"
       @blur="handleSaveNote"
     />
     <div v-else class="editor-output" v-html="output" @click="startEdit"></div>
@@ -98,19 +107,18 @@ watch(
 
 .editor-input,
 .editor-output {
-  width: 50%;
-
+  flex-grow: 1;
   box-sizing: border-box;
   overflow: auto;
 }
 
 .editor-input {
+  width: 100%;
   border: none;
   resize: none;
   outline: none;
   padding: 16px;
   background-color: #f6f6f6;
-
   font-size: 14px;
   font-family: "Monaco", courier, monospace;
 }

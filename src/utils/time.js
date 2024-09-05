@@ -1,4 +1,5 @@
 export function getFormattedTime(time, format = "full") {
+  console.log({ time });
   const hours = time.getHours().toString().padStart(2, "0");
   const minutes = time.getMinutes().toString().padStart(2, "0");
 

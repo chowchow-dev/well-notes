@@ -6,12 +6,22 @@ import App from "./App.vue";
 import "./main.css";
 import router from "./router";
 
+import { ref } from "vue";
+
 const app = createApp(App);
+
+const isAuthenticated = ref(false);
+const updateAuthentication = (value) => {
+  isAuthenticated.value = value;
+};
+
+app.provide("authentication", {
+  isAuthenticated,
+  updateAuthentication,
+});
 
 app.use(router);
 app.use(ElementPlus);
-
-// app.provide("isAuthenticated", false);
 
 for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
   app.component(key, component);

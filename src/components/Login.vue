@@ -1,3 +1,4 @@
+<!-- eslint-disable vue/multi-word-component-names -->
 <template>
   <el-form
     ref="ruleFormRef"
@@ -21,20 +22,25 @@
       </el-form-item>
       <el-button type="primary" @click="submitForm(ruleFormRef)">
         Login
+        <el-icon v-if="loading" class="el-icon--right">
+          <Loading />
+        </el-icon>
       </el-button>
     </el-form-item>
   </el-form>
 </template>
 
 <script setup>
-import { reactive, ref, inject } from "vue";
+import { reactive, ref } from "vue";
 import { useRouter } from "vue-router";
+import { useStore } from "vuex";
+import { Loading } from "@element-plus/icons-vue";
 
+const store = useStore();
 const router = useRouter();
 
-const auth = inject("authentication");
-
 const ruleFormRef = ref();
+const loading = ref(false);
 
 const validateEmail = (rule, value, callback) => {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -69,22 +75,20 @@ const rules = reactive({
 
 const submitForm = (formEl) => {
   if (!formEl) return;
-  const test = {
-    email: "test@test.com",
-    password: "test",
-  };
-
-  const isCorrectFormValues =
-    test.email === ruleForm.email && test.password === ruleForm.password;
 
   formEl.validate((valid) => {
-    if (valid && isCorrectFormValues) {
-      if (auth && typeof auth === "object" && "updateAuthentication" in auth) {
-        auth.updateAuthentication(true);
-        router.push("/");
-      } else {
-        console.error("Authentication object or method not available");
-      }
+    if (valid) {
+      loading.value = true;
+      console.log("dispatching login");
+      store
+        .dispatch("auth/login")
+        .then(() => {
+          console.log("redirecting to home");
+          router.push("/");
+        })
+        .finally(() => {
+          loading.value = false;
+        });
     } else {
       alert("error submit!");
     }

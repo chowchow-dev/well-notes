@@ -1,9 +1,9 @@
 import { createRouter } from "vue-router";
-import { inject } from "vue";
 
-import Home from "./Home.vue";
-import Login from "./Login.vue";
+import Home from "./components/notes/index.vue";
+import Login from "./components/Login.vue";
 import { createWebHistory } from "vue-router";
+import { useStore } from "vuex";
 
 const routes = [
   { path: "/", name: "home", component: Home },
@@ -16,12 +16,12 @@ const router = createRouter({
 });
 
 router.beforeEach(async (to, from, next) => {
-  const auth = inject("authentication");
-  if (to.name !== "login" && !auth.isAuthenticated.value) {
-    console.log("redirecting to login");
+  const store = useStore();
+  await store.dispatch("auth/getMe");
+  console.log("global guard", store.getters["auth/isAuthenticated"]);
+  if (to.name !== "login" && !store.getters["auth/isAuthenticated"]) {
     next({ name: "login" });
-  } else if (to.name === "login" && auth.isAuthenticated.value) {
-    console.log("redirecting to home");
+  } else if (to.name === "login" && store.getters["auth/isAuthenticated"]) {
     next({ name: "home" });
   } else next();
 });

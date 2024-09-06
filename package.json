@@ -17,7 +17,8 @@
     "nanoid": "^5.0.7",
     "uuid": "^10.0.0",
     "vue": "^3.4.29",
-    "vue-router": "^4.4.3"
+    "vue-router": "^4.4.3",
+    "vuex": "^4.0.2"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.0.5",

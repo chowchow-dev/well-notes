@@ -2,24 +2,15 @@ import { createApp } from "vue";
 import ElementPlus from "element-plus";
 import "element-plus/dist/index.css";
 import * as ElementPlusIconsVue from "@element-plus/icons-vue";
-import App from "./App.vue";
-import "./main.css";
+import App from "./components/App.vue";
 import router from "./router";
+import store from "./store";
 
-import { ref } from "vue";
+import "./main.css";
 
 const app = createApp(App);
 
-const isAuthenticated = ref(false);
-const updateAuthentication = (value) => {
-  isAuthenticated.value = value;
-};
-
-app.provide("authentication", {
-  isAuthenticated,
-  updateAuthentication,
-});
-
+app.use(store);
 app.use(router);
 app.use(ElementPlus);
 

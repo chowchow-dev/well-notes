@@ -1,6 +1,6 @@
 <script setup>
 import { ref, nextTick, computed } from "vue";
-import { getFormattedTime } from "../utils/time";
+import { getFormattedTime } from "../../utils/time";
 
 const props = defineProps({
   items: {

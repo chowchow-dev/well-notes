@@ -3,9 +3,10 @@
 import { ref, watch, onMounted } from "vue";
 import { nanoid } from "nanoid";
 import { Delete } from "@element-plus/icons-vue";
-import Sidebar from "./components/SideBar.vue";
-import NoteDetail from "./components/NoteDetail.vue";
-import { useLocalStorage } from "./hooks/localStorage";
+import Sidebar from "./SideBar.vue";
+import NoteDetail from "./NoteDetail.vue";
+import UserProfile from "../UserProfile.vue";
+import { useLocalStorage } from "../../hooks/localStorage";
 
 const KEY = "notes";
 
@@ -80,6 +81,7 @@ onMounted(() => {
 
 <template>
   <el-container class="app-container">
+    <UserProfile />
     <el-header class="app-header">Well Notes</el-header>
     <el-container class="app-main">
       <el-aside class="app-sidebar">

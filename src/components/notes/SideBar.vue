@@ -76,7 +76,7 @@ const handleSubmitTitle = (note) => {
         </template>
 
         <span class="note-time">
-          {{ getFormattedTime(new Date(note.time), "short") }}
+          {{ getFormattedTime(note.time, "short") }}
         </span>
       </el-menu-item>
     </transition-group>

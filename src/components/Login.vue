@@ -93,11 +93,9 @@ const submitForm = (formEl) => {
   formEl.validate((valid) => {
     if (valid) {
       loading.value = true;
-      console.log("dispatching login");
       store
         .dispatch("auth/login")
         .then(() => {
-          console.log("redirecting to home");
           router.push("/");
         })
         .finally(() => {

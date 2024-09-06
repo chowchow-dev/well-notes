@@ -1,67 +1,45 @@
 <script setup>
-import { ref, watch, onMounted } from "vue";
-import { nanoid } from "nanoid";
+import { computed, watch, onMounted } from "vue";
+import { useStore } from "vuex";
 import { Delete } from "@element-plus/icons-vue";
 import Sidebar from "./SideBar.vue";
 import NoteDetail from "./NoteDetail.vue";
 import UserProfile from "../UserProfile.vue";
 import { useLocalStorage } from "../../hooks/localStorage";
 
-const KEY = "notes";
+const storage = useLocalStorage("notes");
+const store = useStore();
 
-const storage = useLocalStorage(KEY);
-
-const noteList = ref([]);
-const currentNote = ref(null);
-
-const assignActiveNote = (note) => {
-  currentNote.value = note;
-};
-
-const addNewNote = (onAddNoteSuccess) => {
-  const newNote = {
-    id: nanoid(),
-    title: "",
-    time: new Date(),
-    markdown: "",
-  };
-  noteList.value.unshift(newNote);
-  assignActiveNote(newNote);
-  onAddNoteSuccess();
-};
+const noteList = computed(() => store.getters["note/noteList"]);
+const currentNote = computed(() => store.getters["note/activeNote"]);
+const noteListByDay = computed(() => store.getters["note/noteListByDay"]);
 
 const handleSelectNote = (note) => {
   if (noteList.value.length > 1 && currentNote.value.markdown.length === 0) {
-    noteList.value = noteList.value.filter(
-      (note) => note.id !== currentNote.value.id
-    );
+    store.dispatch("note/removeNote");
   }
-  assignActiveNote(note);
+  store.dispatch("note/setActiveNote", note.id);
+};
+
+const addNewNote = (onAddNoteSuccess) => {
+  store.dispatch("note/addNewNote");
+  onAddNoteSuccess();
 };
 
 const removeNote = () => {
-  noteList.value = noteList.value.filter(
-    (note) => note.id !== currentNote.value?.id
+  store.dispatch("note/removeNote");
+  store.dispatch(
+    "note/setActiveNote",
+    noteList.value[0] ? noteList.value[0].id : null
   );
-  assignActiveNote(noteList.value[0] || null);
 };
 
 const updateNote = (updatedNote) => {
-  console.log("Updating note");
-  const note = noteList.value.find((n) => n.id === updatedNote.id);
-  if (note) {
-    note.markdown = updatedNote.markdown;
-    if (updatedNote.time) {
-      note.time = updatedNote.time;
-    }
-  }
+  store.dispatch("note/updateNote", updatedNote);
 };
 
 const updateNoteTitle = (updatedNote) => {
-  const note = noteList.value.find((n) => n.id === updatedNote.id);
-  if (note) {
-    note.title = updatedNote.title;
-  }
+  store.dispatch("note/updateNoteTitle", updatedNote);
 };
 
 watch(
@@ -76,13 +54,17 @@ watch(
 onMounted(() => {
   const notes = storage.getLocalData();
   if (notes) {
-    noteList.value = notes;
-    assignActiveNote(noteList.value[0]);
+    store.commit("note/setNoteList", notes);
+    if (notes.length > 0) {
+      store.dispatch("note/setActiveNote", notes[0].id);
+    }
   }
 });
 </script>
 
 <template>
+  <pre>{{ noteListByDay }}</pre>
+
   <el-container class="app-container">
     <UserProfile />
     <el-header class="app-header">Well Notes</el-header>

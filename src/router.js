@@ -15,10 +15,10 @@ const router = createRouter({
   routes,
 });
 
+// global guard
 router.beforeEach(async (to, from, next) => {
   const store = useStore();
   await store.dispatch("auth/getMe");
-  console.log("global guard", store.getters["auth/isAuthenticated"]);
   if (to.name !== "login" && !store.getters["auth/isAuthenticated"]) {
     next({ name: "login" });
   } else if (to.name === "login" && store.getters["auth/isAuthenticated"]) {

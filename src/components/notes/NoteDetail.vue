@@ -53,7 +53,7 @@ const handleSaveNote = () => {
   emit("saveNote", {
     ...props.currentNote,
     markdown: input.value,
-    time: new Date(),
+    time: new Date().toISOString(),
   });
 };
 
@@ -67,7 +67,7 @@ const handleInputChange = () => {
     debouncedSaveNote({
       ...props.currentNote,
       markdown: input.value,
-      time: new Date(),
+      time: new Date().toISOString(),
     });
   } else {
     debouncedSaveNote({

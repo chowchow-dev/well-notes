@@ -21,7 +21,6 @@ const actions = {
     const data = await auth.login();
     const token = data.token;
 
-    console.log("token to store", data);
     // Store token in local storage
     authStorage.setLocalData(token);
 
@@ -35,12 +34,10 @@ const actions = {
     const token = authStorage.getLocalData();
 
     if (!token) {
-      console.log("no token");
       return;
     }
-    console.log("token", token);
-    const data = await auth.getMe(token);
 
+    const data = await auth.getMe(token);
     commit("setAuthInfo", {
       isLoggedIn: true,
       username: data.username,

@@ -1,18 +1,19 @@
 <script setup>
+import { parse as markedParse } from "marked";
+import DOMPurify from "dompurify";
 import { computed, watch, onMounted } from "vue";
 import { useStore } from "vuex";
 import { Delete } from "@element-plus/icons-vue";
+import { useLocalStorage } from "@/hooks/localStorage";
 import Sidebar from "./SideBar.vue";
 import NoteDetail from "./NoteDetail.vue";
 import UserProfile from "../UserProfile.vue";
-import { useLocalStorage } from "../../hooks/localStorage";
 
 const storage = useLocalStorage("notes");
 const store = useStore();
 
 const noteList = computed(() => store.getters["note/noteList"]);
 const currentNote = computed(() => store.getters["note/activeNote"]);
-const noteListByDay = computed(() => store.getters["note/noteListByDay"]);
 
 const handleSelectNote = (note) => {
   if (noteList.value.length > 1 && currentNote.value.markdown.length === 0) {
@@ -21,12 +22,12 @@ const handleSelectNote = (note) => {
   store.dispatch("note/setActiveNote", note.id);
 };
 
-const addNewNote = (onAddNoteSuccess) => {
+const handleAddNote = (onAddNoteSuccess) => {
   store.dispatch("note/addNewNote");
   onAddNoteSuccess();
 };
 
-const removeNote = () => {
+const handleRemoveNote = () => {
   store.dispatch("note/removeNote");
   store.dispatch(
     "note/setActiveNote",
@@ -34,12 +35,18 @@ const removeNote = () => {
   );
 };
 
-const updateNote = (updatedNote) => {
-  store.dispatch("note/updateNote", updatedNote);
-};
+const handleSaveNote = (updatedNote) => {
+  // Bind note content to title
+  const firstLineString = updatedNote.markdown.split("\n")[0];
+  const parsed = markedParse(firstLineString);
+  const sanitized = DOMPurify.sanitize(parsed);
 
-const updateNoteTitle = (updatedNote) => {
-  store.dispatch("note/updateNoteTitle", updatedNote);
+  const tempDiv = document.createElement("div");
+  tempDiv.innerHTML = sanitized;
+  const noteTitle = tempDiv.textContent || tempDiv.innerText;
+  updatedNote.title = noteTitle;
+
+  store.dispatch("note/updateNote", updatedNote);
 };
 
 watch(
@@ -63,32 +70,30 @@ onMounted(() => {
 </script>
 
 <template>
-  <pre>{{ noteListByDay }}</pre>
-
+  <!-- <pre>{{ noteListByDay }}</pre> -->
   <el-container class="app-container">
     <UserProfile />
     <el-header class="app-header">Well Notes</el-header>
     <el-container class="app-main">
       <el-aside class="app-sidebar">
         <el-button
-          @click="removeNote"
-          type="danger"
-          :icon="Delete"
-          circle
           class="remove-button"
+          type="danger"
+          circle
+          :icon="Delete"
+          @click="handleRemoveNote"
         />
         <Sidebar
           :items="noteList"
           :currentNote="currentNote"
           @selectNote="handleSelectNote"
-          @updateTitle="updateNoteTitle"
         />
       </el-aside>
       <el-main class="app-main-content">
         <NoteDetail
           :currentNote="currentNote"
-          @saveNote="updateNote"
-          @addNote="addNewNote"
+          @saveNote="handleSaveNote"
+          @addNote="handleAddNote"
         />
       </el-main>
     </el-container>

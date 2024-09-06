@@ -1,6 +1,6 @@
 <script setup>
-import { ref, nextTick, computed } from "vue";
-import { getFormattedTime } from "../../utils/time";
+import { computed } from "vue";
+import { getFormattedTime } from "@/utils/time";
 
 const props = defineProps({
   items: {
@@ -13,7 +13,7 @@ const props = defineProps({
   },
 });
 
-const emit = defineEmits(["selectNote", "updateTitle"]);
+const emit = defineEmits(["selectNote"]);
 
 const sortedItems = computed(() => {
   return [...props.items].sort((a, b) => new Date(b.time) - new Date(a.time));
@@ -21,27 +21,6 @@ const sortedItems = computed(() => {
 
 const selectNote = (note) => {
   emit("selectNote", note);
-};
-
-const editingTitleId = ref(null);
-const titleInputRefs = ref([]);
-
-const focusInput = () => {
-  titleInputRefs.value[0]?.focus();
-};
-
-const startEditingTitle = async (note) => {
-  editingTitleId.value = note.id;
-  await nextTick();
-  focusInput();
-};
-
-const handleSubmitTitle = (note) => {
-  if (note.title.trim() === "") {
-    note.title = "";
-  }
-  editingTitleId.value = null;
-  emit("updateTitle", note);
 };
 </script>
 
@@ -54,27 +33,9 @@ const handleSubmitTitle = (note) => {
         :index="note.id"
         @click="selectNote(note)"
       >
-        <el-input
-          v-if="editingTitleId === note.id"
-          v-model="note.title"
-          size="small"
-          maxlength="100"
-          class="title-input"
-          ref="titleInputRefs"
-          @blur="handleSubmitTitle(note)"
-          @keyup.enter="handleSubmitTitle(note)"
-        />
-
-        <template v-else>
-          <el-text
-            @click.stop="startEditingTitle(note)"
-            class="title-text"
-            truncated
-          >
-            {{ note.title || note.id }}
-          </el-text>
-        </template>
-
+        <el-text class="title-text" truncated>
+          {{ note.title || "Untitled" }}
+        </el-text>
         <span class="note-time">
           {{ getFormattedTime(note.time, "short") }}
         </span>

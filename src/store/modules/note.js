@@ -61,9 +61,6 @@ const actions = {
   updateNote({ commit }, updatedNote) {
     commit("updateNote", updatedNote);
   },
-  updateNoteTitle({ commit }, updatedNote) {
-    commit("updateNoteTitle", updatedNote);
-  },
   removeNote({ commit, state, getters }) {
     commit("removeNote", state.activeNoteId);
     commit("setActiveNoteId", getters.noteList[0]?.id || null);
@@ -86,14 +83,9 @@ const mutations = {
   },
   updateNote(state, updatedNote) {
     const note = state.noteList.find((n) => n.id === updatedNote.id);
+    console.log("Mutation: ", updatedNote);
     if (note) {
       Object.assign(note, updatedNote);
-    }
-  },
-  updateNoteTitle(state, updatedNote) {
-    const note = state.noteList.find((n) => n.id === updatedNote.id);
-    if (note) {
-      note.title = updatedNote.title;
     }
   },
   removeNote(state, noteId) {

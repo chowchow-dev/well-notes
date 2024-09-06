@@ -1,8 +1,9 @@
 <script setup>
 import { ref, computed, nextTick, watch } from "vue";
-import { marked } from "marked";
+import { parse as markedParse } from "marked";
 import { Plus } from "@element-plus/icons-vue";
 import { debounce } from "lodash-es";
+import DOMPurify from "dompurify";
 
 const props = defineProps({
   currentNote: {
@@ -14,12 +15,13 @@ const props = defineProps({
 const emit = defineEmits(["saveNote", "addNote"]);
 
 const input = ref("");
-const isEditingContent = ref(false);
 const textareaRef = ref(null);
+const isEditingContent = ref(false);
 const isInputDirty = ref(false);
 
 const output = computed(() => {
-  return marked(input.value);
+  const parsed = markedParse(input.value);
+  return DOMPurify.sanitize(parsed);
 });
 
 const focusInput = () => {

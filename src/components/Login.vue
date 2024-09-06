@@ -1,49 +1,3 @@
-<template>
-  <el-card class="login-card">
-    <template #header>
-      <h2 class="login-title">Login</h2>
-    </template>
-    <el-form
-      ref="ruleFormRef"
-      :model="ruleForm"
-      :rules="rules"
-      label-position="top"
-      @submit.prevent="submitForm(ruleFormRef)"
-    >
-      <el-form-item label="Email" prop="email">
-        <el-input v-model="ruleForm.email" placeholder="Enter your email">
-          <template #prefix>
-            <el-icon><Message /></el-icon>
-          </template>
-        </el-input>
-      </el-form-item>
-      <el-form-item label="Password" prop="password">
-        <el-input
-          v-model="ruleForm.password"
-          type="password"
-          placeholder="Enter your password"
-          show-password
-        >
-          <template #prefix>
-            <el-icon><Lock /></el-icon>
-          </template>
-        </el-input>
-      </el-form-item>
-      <el-form-item>
-        <el-button
-          type="primary"
-          native-type="submit"
-          :loading="loading"
-          :disabled="loading"
-          class="login-button"
-        >
-          {{ loading ? "Logging in..." : "Login" }}
-        </el-button>
-      </el-form-item>
-    </el-form>
-  </el-card>
-</template>
-
 <script setup>
 import { reactive, ref } from "vue";
 import { useRouter } from "vue-router";
@@ -107,6 +61,52 @@ const submitForm = (formEl) => {
   });
 };
 </script>
+
+<template>
+  <el-card class="login-card">
+    <template #header>
+      <h2 class="login-title">Login</h2>
+    </template>
+    <el-form
+      ref="ruleFormRef"
+      :model="ruleForm"
+      :rules="rules"
+      label-position="top"
+      @submit.prevent="submitForm(ruleFormRef)"
+    >
+      <el-form-item label="Email" prop="email">
+        <el-input v-model="ruleForm.email" placeholder="Enter your email">
+          <template #prefix>
+            <el-icon><Message /></el-icon>
+          </template>
+        </el-input>
+      </el-form-item>
+      <el-form-item label="Password" prop="password">
+        <el-input
+          v-model="ruleForm.password"
+          type="password"
+          placeholder="Enter your password"
+          show-password
+        >
+          <template #prefix>
+            <el-icon><Lock /></el-icon>
+          </template>
+        </el-input>
+      </el-form-item>
+      <el-form-item>
+        <el-button
+          type="primary"
+          native-type="submit"
+          :loading="loading"
+          :disabled="loading"
+          class="login-button"
+        >
+          {{ loading ? "Logging in..." : "Login" }}
+        </el-button>
+      </el-form-item>
+    </el-form>
+  </el-card>
+</template>
 
 <style scoped>
 .login-card {

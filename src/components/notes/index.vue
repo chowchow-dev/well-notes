@@ -23,8 +23,9 @@ const handleSelectNote = (note) => {
 };
 
 const handleAddNote = (onAddNoteSuccess) => {
-  store.dispatch("note/addNewNote");
-  onAddNoteSuccess();
+  store.dispatch("note/addNewNote").then(() => {
+    onAddNoteSuccess();
+  });
 };
 
 const handleRemoveNote = () => {

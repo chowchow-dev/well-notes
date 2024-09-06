@@ -10,8 +10,9 @@ const isAuthenticated = computed(() => store.getters["auth/isAuthenticated"]);
 const username = computed(() => store.getters["auth/username"]);
 
 const handleLogout = () => {
-  store.dispatch("auth/logout");
-  router.push("/login");
+  store.dispatch("auth/logout").then(() => {
+    router.push("/login");
+  });
 };
 </script>
 

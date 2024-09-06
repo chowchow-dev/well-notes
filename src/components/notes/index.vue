@@ -5,7 +5,7 @@ import { computed, watch, onMounted } from "vue";
 import { useStore } from "vuex";
 import { Delete } from "@element-plus/icons-vue";
 import { useLocalStorage } from "@/hooks/localStorage";
-import Sidebar from "./SideBar.vue";
+import Sidebar from "./Sidebar.vue";
 import NoteDetail from "./NoteDetail.vue";
 import UserProfile from "../UserProfile.vue";
 
@@ -83,11 +83,7 @@ onMounted(() => {
           :icon="Delete"
           @click="handleRemoveNote"
         />
-        <Sidebar
-          :items="noteList"
-          :currentNote="currentNote"
-          @selectNote="handleSelectNote"
-        />
+        <Sidebar :currentNote="currentNote" @selectNote="handleSelectNote" />
       </el-aside>
       <el-main class="app-main-content">
         <NoteDetail

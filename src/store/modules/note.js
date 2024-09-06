@@ -1,11 +1,5 @@
 import { nanoid } from "nanoid";
-
-const NOTE_BY_DAY_KEY = {
-  TODAY: "today",
-  YESTERDAY: "yesterday",
-  LAST_7_DAYS: "last_7_days",
-  LAST_30_DAYS: "last_30_days",
-};
+import { NOTE_BY_DAY_KEY } from "@/constants";
 
 // initial state
 const state = () => ({
@@ -83,9 +77,11 @@ const mutations = {
   },
   updateNote(state, updatedNote) {
     const note = state.noteList.find((n) => n.id === updatedNote.id);
-    console.log("Mutation: ", updatedNote);
     if (note) {
       Object.assign(note, updatedNote);
+      // Remove the note from its current position and add it to the top
+      state.noteList.splice(state.noteList.indexOf(note), 1);
+      state.noteList.unshift(note);
     }
   },
   removeNote(state, noteId) {

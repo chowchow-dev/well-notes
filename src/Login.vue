@@ -26,20 +26,17 @@
   </el-form>
 </template>
 
-<script lang="ts" setup>
+<script setup>
 import { reactive, ref, inject } from "vue";
-import type { FormInstance, FormRules } from "element-plus";
 import { useRouter } from "vue-router";
 
 const router = useRouter();
 
-const auth = inject("authentication") as
-  | { updateAuthentication: (value: boolean) => void }
-  | undefined;
+const auth = inject("authentication");
 
-const ruleFormRef = ref<FormInstance>();
+const ruleFormRef = ref();
 
-const validateEmail = (rule: any, value: any, callback: any) => {
+const validateEmail = (rule, value, callback) => {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   if (!value) {
     callback(new Error("Please input an email address"));
@@ -50,7 +47,7 @@ const validateEmail = (rule: any, value: any, callback: any) => {
   }
 };
 
-const validatePassword = (rule: any, value: any, callback: any) => {
+const validatePassword = (rule, value, callback) => {
   if (!value) {
     callback(new Error("Please input a password"));
   } else if (value.length < 4) {
@@ -65,12 +62,12 @@ const ruleForm = reactive({
   password: "",
 });
 
-const rules = reactive<FormRules<typeof ruleForm>>({
+const rules = reactive({
   email: [{ validator: validateEmail, trigger: "blur" }],
   password: [{ validator: validatePassword, trigger: "blur" }],
 });
 
-const submitForm = (formEl: FormInstance | undefined) => {
+const submitForm = (formEl) => {
   if (!formEl) return;
   const test = {
     email: "test@test.com",
@@ -79,12 +76,11 @@ const submitForm = (formEl: FormInstance | undefined) => {
 
   const isCorrectFormValues =
     test.email === ruleForm.email && test.password === ruleForm.password;
+
   formEl.validate((valid) => {
     if (valid && isCorrectFormValues) {
       if (auth && typeof auth === "object" && "updateAuthentication" in auth) {
-        (
-          auth as { updateAuthentication: (value: boolean) => void }
-        ).updateAuthentication(true);
+        auth.updateAuthentication(true);
         router.push("/");
       } else {
         console.error("Authentication object or method not available");

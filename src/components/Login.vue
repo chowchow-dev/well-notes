@@ -1,40 +1,54 @@
-<!-- eslint-disable vue/multi-word-component-names -->
 <template>
-  <el-form
-    ref="ruleFormRef"
-    style="max-width: 600px"
-    :model="ruleForm"
-    status-icon
-    :rules="rules"
-    label-width="auto"
-    class="demo-ruleForm"
-  >
-    <el-form-item label="Email" prop="email">
-      <el-input v-model.number="ruleForm.email" />
-    </el-form-item>
-    <el-form-item>
+  <el-card class="login-card">
+    <template #header>
+      <h2 class="login-title">Login</h2>
+    </template>
+    <el-form
+      ref="ruleFormRef"
+      :model="ruleForm"
+      :rules="rules"
+      label-position="top"
+      @submit.prevent="submitForm(ruleFormRef)"
+    >
+      <el-form-item label="Email" prop="email">
+        <el-input v-model="ruleForm.email" placeholder="Enter your email">
+          <template #prefix>
+            <el-icon><Message /></el-icon>
+          </template>
+        </el-input>
+      </el-form-item>
       <el-form-item label="Password" prop="password">
         <el-input
           v-model="ruleForm.password"
           type="password"
-          autocomplete="off"
-        />
+          placeholder="Enter your password"
+          show-password
+        >
+          <template #prefix>
+            <el-icon><Lock /></el-icon>
+          </template>
+        </el-input>
       </el-form-item>
-      <el-button type="primary" @click="submitForm(ruleFormRef)">
-        Login
-        <el-icon v-if="loading" class="el-icon--right">
-          <Loading />
-        </el-icon>
-      </el-button>
-    </el-form-item>
-  </el-form>
+      <el-form-item>
+        <el-button
+          type="primary"
+          native-type="submit"
+          :loading="loading"
+          :disabled="loading"
+          class="login-button"
+        >
+          {{ loading ? "Logging in..." : "Login" }}
+        </el-button>
+      </el-form-item>
+    </el-form>
+  </el-card>
 </template>
 
 <script setup>
 import { reactive, ref } from "vue";
 import { useRouter } from "vue-router";
 import { useStore } from "vuex";
-import { Loading } from "@element-plus/icons-vue";
+import { Message, Lock } from "@element-plus/icons-vue";
 
 const store = useStore();
 const router = useRouter();
@@ -90,8 +104,25 @@ const submitForm = (formEl) => {
           loading.value = false;
         });
     } else {
-      alert("error submit!");
+      console.error("error submit!");
     }
   });
 };
 </script>
+
+<style scoped>
+.login-card {
+  max-width: 400px;
+  margin: 2rem auto;
+}
+
+.login-title {
+  text-align: center;
+  margin: 0;
+  color: #409eff;
+}
+
+.login-button {
+  width: 100%;
+}
+</style>

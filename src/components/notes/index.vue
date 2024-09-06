@@ -1,4 +1,3 @@
-<!-- eslint-disable vue/multi-word-component-names -->
 <script setup>
 import { ref, watch, onMounted } from "vue";
 import { nanoid } from "nanoid";
@@ -48,10 +47,13 @@ const removeNote = () => {
 };
 
 const updateNote = (updatedNote) => {
+  console.log("Updating note");
   const note = noteList.value.find((n) => n.id === updatedNote.id);
   if (note) {
     note.markdown = updatedNote.markdown;
-    note.time = updatedNote.time;
+    if (updatedNote.time) {
+      note.time = updatedNote.time;
+    }
   }
 };
 
@@ -65,6 +67,7 @@ const updateNoteTitle = (updatedNote) => {
 watch(
   noteList,
   (newNoteList) => {
+    console.log("Sync note list to local storage");
     storage.setLocalData(newNoteList);
   },
   { deep: true }

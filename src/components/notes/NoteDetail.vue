@@ -2,6 +2,7 @@
 import { ref, computed, nextTick, watch } from "vue";
 import { marked } from "marked";
 import { Plus } from "@element-plus/icons-vue";
+import { debounce } from "lodash-es";
 
 const props = defineProps({
   currentNote: {
@@ -15,6 +16,7 @@ const emit = defineEmits(["saveNote", "addNote"]);
 const input = ref("");
 const isEditingContent = ref(false);
 const textareaRef = ref(null);
+const isInputDirty = ref(false);
 
 const output = computed(() => {
   return marked(input.value);
@@ -47,6 +49,7 @@ const handleSaveNote = () => {
     return;
   }
   isEditingContent.value = false;
+  isInputDirty.value = false;
   emit("saveNote", {
     ...props.currentNote,
     markdown: input.value,
@@ -54,12 +57,24 @@ const handleSaveNote = () => {
   });
 };
 
+const debouncedSaveNote = debounce((note) => {
+  emit("saveNote", note);
+}, 300);
+
 const handleInputChange = () => {
-  emit("saveNote", {
-    ...props.currentNote,
-    markdown: input.value,
-    time: new Date(),
-  });
+  if (!isInputDirty.value) {
+    isInputDirty.value = true;
+    debouncedSaveNote({
+      ...props.currentNote,
+      markdown: input.value,
+      time: new Date(),
+    });
+  } else {
+    debouncedSaveNote({
+      ...props.currentNote,
+      markdown: input.value,
+    });
+  }
 };
 
 watch(

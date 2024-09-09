@@ -1,23 +1,24 @@
 # Well Notes App
 
-**Tier:** 1-Beginner
-
-Create and store your notes for later purpose!
+A clone of the Macbook's Notes app, built with Vue.js and Element Plus.
 
 ## User Stories
 
-- [ ] User can create a note
-- [ ] User can edit a note
-- [ ] User can delete a note
-- [ ] When closing the browser window the notes will be stored and when the User returns, the data will be retrieved
+- [x] User can create a note
+- [x] User can edit a note
+- [x] User can delete a note
+- [x] Persist notes in localStorage
 
 ## Bonus features
 
-- [ ] User can create and edit a note in Markdown format. On save it will convert Markdown to HTML
-- [ ] User can see the date when he created the note
+- [x] User can create and edit a note in Markdown format. On save it will convert Markdown to HTML
+- [x] User can see the date when he created the note
+- [x] Auto reorder notes by date
+- [x] User can login and logout
 
 ## Useful links and resources
 
 - [localStorage](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage)
 - [Markdown Guide](https://www.markdownguide.org/basic-syntax/)
 - [Marked - A markdown parser](https://github.com/markedjs/marked)
+- [Element Plus](https://element-plus.org/en-US/)

@@ -18,22 +18,22 @@ const handleLogout = () => {
 
 <template>
   <div class="profile-container">
-    <div v-if="isAuthenticated">
-      <h1>Welcome, {{ username }}</h1>
-      <button @click="handleLogout">Logout</button>
+    <div v-if="isAuthenticated" :class="$style.profileContent">
+      <h1 :class="$style.welcomeMessage">Welcome, {{ username }}</h1>
+      <button :class="$style.logoutButton" @click="handleLogout">Logout</button>
     </div>
   </div>
 </template>
 
-<style scoped>
-.profile-container {
+<style module>
+.profileContainer {
   max-width: 600px;
   margin: 0 auto;
   padding: 20px;
   text-align: center;
 }
 
-button {
+.logoutButton {
   background-color: #f44336;
   color: white;
   padding: 10px 20px;
@@ -43,7 +43,7 @@ button {
   font-size: 16px;
 }
 
-button:hover {
+.logoutButton:hover {
   background-color: #d32f2f;
 }
 </style>

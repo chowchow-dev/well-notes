@@ -63,9 +63,9 @@ const submitForm = (formEl) => {
 </script>
 
 <template>
-  <el-card class="login-card">
+  <el-card :class="$style.loginCard">
     <template #header>
-      <h2 class="login-title">Login</h2>
+      <h2 :class="$style.loginTitle">Login</h2>
     </template>
     <el-form
       ref="ruleFormRef"
@@ -99,7 +99,7 @@ const submitForm = (formEl) => {
           native-type="submit"
           :loading="loading"
           :disabled="loading"
-          class="login-button"
+          :class="$style.loginButton"
         >
           {{ loading ? "Logging in..." : "Login" }}
         </el-button>
@@ -108,19 +108,19 @@ const submitForm = (formEl) => {
   </el-card>
 </template>
 
-<style scoped>
-.login-card {
+<style module>
+.loginCard {
   max-width: 400px;
   margin: 2rem auto;
 }
 
-.login-title {
+.loginTitle {
   text-align: center;
   margin: 0;
   color: #409eff;
 }
 
-.login-button {
+.loginButton {
   width: 100%;
 }
 </style>

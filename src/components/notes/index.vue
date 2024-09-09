@@ -7,7 +7,7 @@ import { Delete } from "@element-plus/icons-vue";
 import { useLocalStorage } from "@/hooks/localStorage";
 import NoteDetail from "./NoteDetail.vue";
 import UserProfile from "../UserProfile.vue";
-import Sidebar from "./Sidebar.vue";
+import Sidebar from "./SideBar.vue";
 
 const storage = useLocalStorage("notes");
 const store = useStore();
@@ -53,7 +53,6 @@ const handleSaveNote = (updatedNote) => {
 watch(
   noteList,
   (newNoteList) => {
-    console.log("Sync note list to local storage");
     storage.setLocalData(newNoteList);
   },
   { deep: true }
@@ -71,13 +70,13 @@ onMounted(() => {
 </script>
 
 <template>
-  <el-container class="app-container">
+  <el-container :class="$style.appContainer">
     <UserProfile />
-    <el-header class="app-header">Well Notes</el-header>
-    <el-container class="app-main">
-      <el-aside class="app-sidebar">
+    <el-header :class="$style.appHeader">Well Notes</el-header>
+    <el-container :class="$style.appMain">
+      <el-aside :class="$style.appSidebar">
         <el-button
-          class="remove-button"
+          :class="$style.removeButton"
           type="danger"
           circle
           :icon="Delete"
@@ -85,7 +84,7 @@ onMounted(() => {
         />
         <Sidebar :currentNote="currentNote" @selectNote="handleSelectNote" />
       </el-aside>
-      <el-main class="app-main-content">
+      <el-main :class="$style.appMainContent">
         <NoteDetail
           :currentNote="currentNote"
           @saveNote="handleSaveNote"
@@ -96,12 +95,12 @@ onMounted(() => {
   </el-container>
 </template>
 
-<style scoped>
-.app-container {
+<style module>
+.appContainer {
   height: 100%;
 }
 
-.app-header {
+.appHeader {
   font-size: 24px;
   font-weight: bold;
   padding: 0;
@@ -109,7 +108,7 @@ onMounted(() => {
   margin: auto;
 }
 
-.app-sidebar {
+.appSidebar {
   padding-block: 8px;
   padding-inline: 16px;
   display: flex;
@@ -119,21 +118,21 @@ onMounted(() => {
   border-right: 1px solid var(--el-menu-border-color);
 }
 
-.app-main {
+.appMain {
   padding: 0;
   display: flex;
   gap: 8px;
   max-height: calc(100vh - 100px);
 }
 
-.app-main-content {
+.appMainContent {
   padding: 8px;
   display: flex;
   flex-direction: column;
   gap: 8px;
 }
 
-.remove-button {
+.removeButton {
   align-self: flex-end;
 }
 </style>

@@ -30,24 +30,28 @@ const selectNote = (note) => {
 </script>
 
 <template>
-  <el-menu :default-active="currentNote?.id">
+  <el-menu :default-active="currentNote?.id" :class="$style.menu">
     <template v-for="(notes, day) in noteListByDay" :key="day">
       <el-menu-item-group
         v-if="notes.length > 0"
         :title="mapDayKeyToTitle[day]"
+        :class="$style.menuItemGroup"
       >
-        <transition-group name="list" tag="div">
+        <transition-group name="list" tag="div" :class="$style.menuItemGroup">
           <el-menu-item
             v-for="note in notes"
             :key="note.id"
             :index="note.id"
             @click="selectNote(note)"
-            :class="{ 'is-active': currentNote?.id === note.id }"
+            :class="[
+              $style.menuItem,
+              { [$style.isActive]: currentNote?.id === note.id },
+            ]"
           >
-            <el-text class="title-text" truncated>
+            <el-text :class="$style.titleText" truncated>
               {{ note.title || "Untitled" }}
             </el-text>
-            <span class="note-time">
+            <span :class="$style.noteTime">
               {{ getFormattedTime(note.time, "short") }}
             </span>
           </el-menu-item>
@@ -57,51 +61,50 @@ const selectNote = (note) => {
   </el-menu>
 </template>
 
-<style scoped>
-/* TODO: dont know why this css is not working */
-.el-menu-item-group__title {
-  font-size: 16px;
-  color: red !important;
+<style module>
+.menuItemGroup :global(.el-menu-item-group__title) {
+  font-size: 14px;
+  color: gray;
 }
 
-.el-menu {
+.menu {
   flex-grow: 1;
   overflow-y: auto;
   border-right: none;
 }
 
-.el-menu-item {
+.menuItem {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
-.el-menu-item.is-active {
+.isActive {
   background-color: #f0f0f0;
 }
 
-.title-text {
+.titleText {
   margin-right: 8px;
 }
 
-.note-time {
+.noteTime {
   font-size: 0.8em;
   color: #999;
 }
 
-.list-move,
-.list-enter-active,
-.list-leave-active {
-  transition: all 0.25s ease;
+:global(.list-move),
+:global(.list-enter-active),
+:global(.list-leave-active) {
+  transition: all 0.5s ease;
 }
 
-.list-enter-from,
-.list-leave-to {
+:global(.list-enter-from),
+:global(.list-leave-to) {
   opacity: 0;
   transform: translateX(30px);
 }
 
-.list-leave-active {
+:global(.list-leave-active) {
   position: absolute;
 }
 </style>

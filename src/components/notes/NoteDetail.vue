@@ -95,41 +95,46 @@ watch(
     :icon="Plus"
     :disabled="props.currentNote && input.length === 0"
     circle
-    class="add-button"
+    :class="$style.addButton"
     @click="addNote"
   />
   <div
     v-if="props.currentNote"
     :key="props.currentNote.id"
-    class="editor-container"
+    :class="$style.editorContainer"
   >
     <textarea
       v-if="isEditingContent"
-      class="editor-input"
+      :class="$style.editorInput"
       ref="textareaRef"
       v-model="input"
       @input="handleInputChange"
       @blur="handleSaveNote"
     />
-    <div v-else class="editor-output" v-html="output" @click="startEdit"></div>
+    <div
+      v-else
+      :class="$style.editorOutput"
+      v-html="output"
+      @click="startEdit"
+    ></div>
   </div>
 </template>
 
-<style scoped>
-.editor-container {
+<style module>
+.editorContainer {
   flex-grow: 1;
   display: flex;
   gap: 8px;
 }
 
-.editor-input,
-.editor-output {
+.editorInput,
+.editorOutput {
   flex-grow: 1;
   box-sizing: border-box;
   overflow: auto;
 }
 
-.editor-input {
+.editorInput {
   width: 100%;
   border: none;
   resize: none;
@@ -140,7 +145,7 @@ watch(
   font-family: "Monaco", courier, monospace;
 }
 
-.editor-output :deep(code) {
+.editorOutput :global(code) {
   color: #f66;
 }
 </style>

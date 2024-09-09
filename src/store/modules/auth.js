@@ -1,5 +1,5 @@
-import auth from "../../api/auth";
-import { useLocalStorage } from "../../hooks/localStorage";
+import auth from "@/api/auth";
+import { useLocalStorage } from "@/hooks/localStorage";
 
 const authStorage = useLocalStorage("auth");
 

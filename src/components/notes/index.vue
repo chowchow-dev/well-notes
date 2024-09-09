@@ -5,9 +5,9 @@ import { computed, watch, onMounted } from "vue";
 import { useStore } from "vuex";
 import { Delete } from "@element-plus/icons-vue";
 import { useLocalStorage } from "@/hooks/localStorage";
-import Sidebar from "./Sidebar.vue";
 import NoteDetail from "./NoteDetail.vue";
 import UserProfile from "../UserProfile.vue";
+import Sidebar from "./Sidebar.vue";
 
 const storage = useLocalStorage("notes");
 const store = useStore();
@@ -71,7 +71,6 @@ onMounted(() => {
 </script>
 
 <template>
-  <!-- <pre>{{ noteListByDay }}</pre> -->
   <el-container class="app-container">
     <UserProfile />
     <el-header class="app-header">Well Notes</el-header>

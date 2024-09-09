@@ -1,5 +1,6 @@
 import { nanoid } from "nanoid";
 import { NOTE_BY_DAY_KEY } from "@/constants";
+import { getNoteByDayKey } from "@/utils/time";
 
 // initial state
 const state = () => ({
@@ -21,19 +22,7 @@ const getters = {
       [NOTE_BY_DAY_KEY.LAST_30_DAYS]: [],
     };
     state.noteList.forEach((note) => {
-      const noteDateString = new Date(note.time).toDateString();
-
-      function getNoteByDayKey(dateString) {
-        const today = new Date().toDateString();
-        const yesterday = new Date(Date.now() - 86400000).toDateString();
-        const last7Days = new Date(Date.now() - 7 * 86400000).toDateString();
-        if (dateString === today) return NOTE_BY_DAY_KEY.TODAY;
-        if (dateString === yesterday) return NOTE_BY_DAY_KEY.YESTERDAY;
-        if (dateString >= last7Days) return NOTE_BY_DAY_KEY.LAST_7_DAYS;
-        return NOTE_BY_DAY_KEY.LAST_30_DAYS;
-      }
-
-      const noteByDayKey = getNoteByDayKey(noteDateString);
+      const noteByDayKey = getNoteByDayKey(note.time);
       map[noteByDayKey].push(note);
     });
     return map;
